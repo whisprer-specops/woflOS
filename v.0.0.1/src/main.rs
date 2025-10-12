@@ -4,7 +4,6 @@
 
 extern crate alloc;
 
-use alloc::vec::Vec;
 use core::arch::asm;
 use core::panic::PanicInfo;
 
@@ -52,17 +51,16 @@ pub unsafe extern "C" fn _start() -> ! {
 
 fn kernel_main() -> ! {
     let uart = Uart::new(0x1000_0000);
-
+    
     uart.puts("\n");
-    uart.puts("==================================================\n");
-    uart.puts("| w❄ []OS - an OS for stability and performance: |\n");
-    uart.puts("|      _    _                  ___      ___      |\n");
-    uart.puts("|     ||   || \\   /  T|=  ||  / _ \\    /__/      |\n");
-    uart.puts("|     |\\_T_/|>- + -< ||-  || | (_) | __\\\\        |\n");
-    uart.puts("|      \\___/  /   \\  L|  =||  \\___/  \\__/        |\n");
-    uart.puts("|                                                |\n"); 
-    uart.puts("|     Rust + RISC-V + Microkernel = Stability    |\n");
-    uart.puts("==================================================\n");
+    uart.puts("============================================\n");
+    uart.puts(" __      __ ___  ___  _     ___   ___ \n");
+    uart.puts(" \\ \\    / // _ \\| __|| |   / _ \\ / __|\n");
+    uart.puts("  \\ \\/\\/ /| (_) | _| | |__| (_) |\\__ \\\n");
+    uart.puts("   \\_/\\_/  \\___/|_|  |____|\\___/ |___/\n");
+    uart.puts("                                        \n");
+    uart.puts("   Rust + RISC-V + Microkernel = Stability\n");
+    uart.puts("============================================\n");
     uart.puts("\n");
     uart.puts("[OK] woflOS v0.2.0 booting...\n");
     uart.puts("[OK] UART initialized\n");
@@ -71,7 +69,7 @@ fn kernel_main() -> ! {
     uart.puts("[OK] Kernel main entered\n");
     uart.puts("\n");
     
-    uart.puts("[OK] Kernel main entered\n");
+uart.puts("[OK] Kernel main entered\n");
     uart.puts("\n");
     
     // Test memory allocation with direct allocator test first!
