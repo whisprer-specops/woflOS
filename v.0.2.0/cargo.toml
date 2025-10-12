@@ -1,0 +1,15 @@
+[package]
+name = "woflos"
+version = "0.2.0"
+edition = "2021"
+authors = ["wofl <wofl@woflos.dev>"]
+
+[dependencies]
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+lto = true
+opt-level = "z"  # Optimize for size - resource efficiency!
