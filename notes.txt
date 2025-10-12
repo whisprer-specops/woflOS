@@ -1,0 +1,24 @@
+    w❄[]OS - an OS for stability and performance:
+	 _   _  	           ___      ___
+	||   ||  \   /   T|=  ||  / _ \    /  _/
+	|\_T_/| >- + -<  ||-  || | (_) | __\ \
+	 \___/   /   \   L|  =||  \___/  \___/
+
+Architecture: RISC-V (clean, open, future-proof)
+Kernel Type:  Microkernel (isolated services, max stability)
+Language:     Rust (memory safety = no segfaults)
+Tooling:      WSL Ubuntu + QEMU
+
+
+Memory Architecture Plan:RISC-V Memory Layout (128MB):
+┌─────────────────────────────────┐ 0x88000000 (Top of RAM)
+│                                 |
+│   Free Memory Pool              │ ← We allocate from here
+│                                 │
+├─────────────────────────────────┤ End of kernel
+│   woflOS Kernel (.text/.data)   │
+├─────────────────────────────────┤ 0x80200000
+│   OpenSBI Firmware              │
+└─────────────────────────────────┘ 0x80000000
+
+
