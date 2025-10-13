@@ -9,6 +9,7 @@ use core::panic::PanicInfo;
 
 mod uart;
 mod memory;
+mod interrupts;
 
 use uart::Uart;
 
@@ -62,20 +63,30 @@ fn kernel_main() -> ! {
     uart.puts("   Rust + RISC-V + Microkernel = Stability\n");
     uart.puts("============================================\n");
     uart.puts("\n");
-    uart.puts("[OK] woflOS v0.2.0 booting...\n");
+    uart.puts("[OK] woflOS v0.4.0 booting...\n");
     uart.puts("[OK] UART initialized\n");
     uart.puts("[OK] BSS cleared\n");
     uart.puts("[OK] Memory manager initialized\n");
     uart.puts("[OK] Kernel main entered\n");
     uart.puts("\n");
     
-uart.puts("[OK] Kernel main entered\n");
+    // NEW: Initialize interrupts!
+    interrupts::trap::init();
     uart.puts("\n");
     
-    // Test memory allocation with direct allocator test first!
+    uart.puts("[DEBUG] Interrupts initialized, about to enter idle loop\n");
+    uart.puts("[DEBUG] Current time: ");
+    unsafe {
+        let time: u64;
+        core::arch::asm!("rdtime {}", out(reg) time);
+        // Can't print numbers easily, but at least we're here
+        uart.puts("...\n");
+    }
+    uart.puts("[DEBUG] Entering wfi loop now!\n");
+    
+    // Test memory allocation
     uart.puts("[TEST] Testing heap allocator directly...\n");
     
-    // Test the allocator directly
     use core::alloc::Layout;
     unsafe {
         let layout = Layout::from_size_align_unchecked(32, 8);
@@ -86,30 +97,27 @@ uart.puts("[OK] Kernel main entered\n");
             uart.puts("[ERROR] Direct allocation returned null!\n");
         } else {
             uart.puts("[OK] Direct allocation succeeded!\n");
-            // Write something to it
             *ptr = 0x42;
             uart.puts("[OK] Successfully wrote to allocated memory!\n");
             alloc::alloc::dealloc(ptr, layout);
         }
     }
     
-    uart.puts("\n[TEST] Now testing Vec allocation...\n");
-    uart.puts("[OK] Vec tests skipped (direct allocation works!)\n");
-    
-    // Show memory stats
-    let (_used_frames, _total_frames) = memory::frame::get_stats();
-    let _heap_used = memory::heap::heap_used();
-    
     uart.puts("\n");
     uart.puts("woflOS is alive, fren! 🐺\n");
     uart.puts("Memory management: OPERATIONAL ✓\n");
+    uart.puts("Interrupts: ENABLED ✓\n");
     uart.puts("\n");
-    uart.puts("[INFO] Entering infinite loop (no scheduler yet)...\n");
+    uart.puts("[INFO] Entering idle loop. Timer ticks should appear!\n");
+    uart.puts("\n");
     
-    // Infinite loop - we'll add scheduler here later!
+    // Idle loop - interrupts will fire!
     loop {
-        unsafe {
-            asm!("wfi"); // Wait For Interrupt - saves power!
+        // Just spin - don't use wfi, it might cause exceptions
+        for _ in 0..1000 {
+            unsafe {
+                core::arch::asm!("nop");
+            }
         }
     }
 }
@@ -123,11 +131,8 @@ fn panic(info: &PanicInfo) -> ! {
         uart.puts("Location: ");
         uart.puts(location.file());
         uart.puts(":");
-        // Would print line number if we had number formatting
         uart.puts("\n");
     }
-    
-    uart.puts("Message: (formatter not implemented yet)\n");
     
     uart.puts("[PANIC] System halted.\n");
     

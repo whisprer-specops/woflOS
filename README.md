@@ -3,7 +3,7 @@
 **Architecture:** RISC-V 64-bit  
 **Kernel Type:** Microkernel  
 **Language:** Rust  
-**Version:** 0.2.0 - Memory Management
+**Version:** 0.4.0 - Interactive Shell
 
 ## 🎯 Project Goals
 

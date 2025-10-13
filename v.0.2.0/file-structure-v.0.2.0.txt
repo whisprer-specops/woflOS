@@ -1,0 +1,29 @@
+PS D:\code\woflOS\v.0.2.0> tree /F /A
+Folder PATH listing for volume X:/
+Volume serial number is 0000-000X
+X:.
+|   build.sh
+|   Cargo.lock
+|   cargo.toml
+|   linker.ld
+|   toolchain.toml
+|
++---.cargo
+|       config.toml
+|
+\---src
+    |   main.rs
+    |   shell.rs
+    |   uart.rs
+    |
+    +---interrupts
+    |       mod.rs
+    |       timer.rs
+    |       trap.rs
+    |
+    \---memory
+            frame.rs
+            heap.rs
+            mod.rs
+
+PS D:\code\woflOS\v.0.2.0>
