@@ -35,8 +35,8 @@ pub fn init() {
 #[no_mangle]
 pub unsafe extern "C" fn trap_entry() {
     naked_asm!(
-        // Make room on stack (we're already on kernel stack)
-        "addi sp, sp, -256",
+        // Make room on stack - LOTS of room for Rust function
+        "addi sp, sp, -512",  // 512 bytes should be plenty!
         
         // Save ALL callee and caller-saved registers
         "sd ra, 0(sp)",      // x1
@@ -108,7 +108,7 @@ pub unsafe extern "C" fn trap_entry() {
         "ld t6, 240(sp)",
         
         // Restore sp
-        "addi sp, sp, 256",
+        "addi sp, sp, 512",  // Match the allocation!
         
         "sret",
         trap_handler = sym trap_handler
@@ -117,18 +117,23 @@ pub unsafe extern "C" fn trap_entry() {
 
 #[no_mangle]
 extern "C" fn trap_handler() {
+    // FIRST thing - print that we got here!
+    let uart = Uart::new(0x1000_0000);
+    uart.puts("[TRAP!]\n");
+    
     let scause: usize;
     unsafe {
         asm!("csrr {}, scause", out(reg) scause);
     }
     
     if scause & (1 << 63) != 0 {
+        uart.puts("[INT]\n");
         let cause = scause & 0x7FFF_FFFF_FFFF_FFFF;
         if cause == 5 {
             handle_timer_interrupt();
         }
     } else {
-        uart_print("[ERROR] Exception!\n");
+        uart.puts("[EXC]\n");
         loop {}
     }
 }
