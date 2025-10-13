@@ -7,13 +7,13 @@ AS OF 2025-10-13:06:00 THIS IS NOW SPECIFICALLY GOING TO BE A SECUTIY ANGLED OS 
 **Language:** Rust  
 **Version:** 0.4.0 - Interactive Shell
 
-## 🎯 Project Goals
+## Project Goals
 
 - **Stability First:** Microkernel architecture + Rust memory safety
 - **Resource Efficiency:** Optimized for minimal memory/CPU usage
 - **Modern Design:** Clean RISC-V ISA, no legacy baggage
 
-## 🧠 Memory System Architecture
+## Memory System Architecture
 
 woflOS implements a two-tier memory management system:
 
@@ -43,7 +43,7 @@ Memory Layout:
 0x80000000 └─────────────────────┘ RAM starts here
 ```
 
-## 🛠️ Setup Instructions
+## Setup Instructions
 
 ### 1. Create Project Structure
 
@@ -78,12 +78,12 @@ chmod +x build.sh
 
 You should see woflOS boot with ASCII art and status messages!
 
-## 🎮 QEMU Controls
+## QEMU Controls
 
 - **Quit QEMU:** Press `Ctrl+A` then `X`
 - **View QEMU monitor:** Press `Ctrl+A` then `C`
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 woflOS/
@@ -97,7 +97,7 @@ woflOS/
 └── build.sh             # Build and run script
 ```
 
-## ✅ What's Working (v0.1.0)
+## What's Working (v0.1.0)
 
 - [x] Boots on RISC-V in QEMU
 - [x] Serial console output via UART
@@ -105,7 +105,7 @@ woflOS/
 - [x] Panic handler
 - [x] Power-efficient idle loop (WFI instruction)
 
-## 🚧 Coming Next (v0.2.0)
+## Coming Next (v0.2.0)
 
 - [ ] Memory management (page allocator)
 - [ ] Process/thread scheduling
@@ -113,7 +113,7 @@ woflOS/
 - [ ] System calls
 - [ ] IPC for microkernel services
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 **Build fails with "can't find crate":**
 ```bash
