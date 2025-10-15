@@ -5,6 +5,7 @@ X:.
 |   build.sh
 |   Cargo.lock
 |   cargo.toml
+|   file-structure-v.0.2.0.txt
 |   linker.ld
 |   toolchain.toml
 |
@@ -18,7 +19,6 @@ X:.
     |
     +---interrupts
     |       mod.rs
-    |       timer.rs
     |       trap.rs
     |
     \---memory
