@@ -1,6 +1,6 @@
 <div align="center"><img src="https://github.com/whisprer-specops/woflOS/blob/main/assets/woflOS.png?raw=true" width="400" alt="woflOS banner"><p><i>The secure stable high performance OS. (Uniquely secure in the OS realm!)</i></p></div>
 
-AS OF 2025-10-13:06:00 THIS IS NOW SPECIFICALLY GOING TO BE A SECURITY ANGLED OS AND HENCE THERE IS SOME CHANGING OF DIRECTION. IT CURRENTLY BOOTS UP TO INTERUPT HANDLING BUT HAS HIT A SNAG THERE AND AWAITS FURTHER DEVELOPMENT.
+AS OF 2025-10-13:06:00 THIS IS NOW SPECIFICALLY GOING TO BE A SECURITY ANGLED OS AND HENCE THERE IS SOME CHANGING OF DIRECTION.
 
 # woflOS - A Stable, Resource-Efficient Operating System
 
