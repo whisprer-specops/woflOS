@@ -36,6 +36,9 @@ pub fn init() {
 pub unsafe extern "C" fn trap_entry() {
     naked_asm!(
         // Make room on stack - LOTS of room for Rust function
+        // Align sp to 16 bytes FIRST
+        "andi sp, sp, -16",     // Mask off bottom 4 bits
+        "addi sp, sp, -512",    // Now allocate
         "addi sp, sp, -512",  // 512 bytes should be plenty!
         
         // Save ALL callee and caller-saved registers
@@ -132,8 +135,26 @@ extern "C" fn trap_handler() {
         if cause == 5 {
             handle_timer_interrupt();
         }
-    } else {
-        uart.puts("[EXC]\n");
+} else {
+    uart.puts("[EXC]\n");
+
+    let sepc: usize;
+    let scause: usize;
+    let stval: usize;
+    let sstatus: usize;
+    
+    unsafe {
+        asm!("csrr {}, scause", out(reg) scause);
+        asm!("csrr {}, sepc", out(reg) sepc);
+        asm!("csrr {}, stval", out(reg) stval);
+        asm!("csrr {}, sstatus", out(reg) sstatus);
+    }
+    
+        uart.puts("cause:   "); print_hex(scause); uart.puts("\n");
+        uart.puts("sepc:    "); print_hex(sepc); uart.puts("\n");
+        uart.puts("stval:   "); print_hex(stval); uart.puts("\n");
+        uart.puts("sstatus: "); print_hex(sstatus); uart.puts("\n");
+    
         loop {}
     }
 }
@@ -177,6 +198,15 @@ unsafe fn sbi_set_timer(stime_value: u64) {
         out("a0") _,
         out("a6") _,
         out("a7") _,
+        // Add these! OpenSBI can clobber temporaries:
+        out("a1") _,
+        out("t0") _,
+        out("t1") _,
+        out("t2") _,
+        out("t3") _,
+        out("t4") _,
+        out("t5") _,
+        out("t6") _,
     );
 }
 
@@ -184,6 +214,13 @@ fn print_hex(n: usize) {
     let uart = Uart::new(0x1000_0000);
     let hex_chars = b"0123456789abcdef";
     
+    let sstatus: usize;
+    unsafe {
+        asm!("csrr {}, sstatus", out(reg) sstatus);
+    }
+    uart.puts("sstatus: ");
+    print_hex(sstatus);
+
     for i in (0..16).rev() {
         let digit = ((n >> (i * 4)) & 0xF) as usize;
         uart.putc(hex_chars[digit]);
