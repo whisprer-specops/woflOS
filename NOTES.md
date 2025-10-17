@@ -151,3 +151,16 @@ This diagram illustrates how the kernel signs capabilities with its
 private key to create unforgeable tokens that user processes hold and
 use to request access. The kernel verifies these tokens cryptographically
 to enforce access control securely.
+
+
+This privilege transition is like **quantum state collapse** in physics:
+- **Superposition**: CPU can be in S-mode OR U-mode
+- **Measurement**: `ecall` instruction "measures" state → collapses to S-mode
+- **Observer Effect**: Trap handler changes system state
+- **Return**: `sret` "uncollapses" back to U-mode
+
+The **context structure** is like a **wave function** - it contains all possible information about the system state!
+```
+|ψ⟩ = α|S-mode⟩ + β|U-mode⟩
+     ecall → |S-mode⟩
+     sret  → |U-mode⟩
