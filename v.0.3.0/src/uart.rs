@@ -1,4 +1,6 @@
 /// UART driver for 16550-compatible serial console
+use core::fmt;
+
 pub struct Uart {
     base_address: usize,
 }
@@ -87,4 +89,39 @@ impl Uart {
             self.putc(c);
         }
     }
+}
+
+/// Simple global printing support for `no_std`.
+///
+/// This is intentionally tiny: it only needs to be good enough for
+/// bring-up and debugging of Layers 0-1.
+struct UartWriter;
+
+impl fmt::Write for UartWriter {
+    fn write_str(&mut self, s: &str) -> fmt::Result {
+        let uart = Uart::new(0x1000_0000);
+        uart.puts(s);
+        Ok(())
+    }
+}
+
+#[doc(hidden)]
+pub fn _print(args: fmt::Arguments) {
+    use fmt::Write;
+    let mut w = UartWriter;
+    let _ = w.write_fmt(args);
+}
+
+/// Kernel print (no newline)
+#[macro_export]
+macro_rules! kprint {
+    ($($arg:tt)*) => ($crate::uart::_print(core::format_args!($($arg)*)));
+}
+
+/// Kernel print (with newline)
+#[macro_export]
+macro_rules! kprintln {
+    () => ($crate::kprint!("\n"));
+    ($fmt:expr) => ($crate::kprint!(concat!($fmt, "\n")));
+    ($fmt:expr, $($arg:tt)*) => ($crate::kprint!(concat!($fmt, "\n"), $($arg)*));
 }
